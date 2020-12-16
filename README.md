@@ -1,2 +1,2 @@
 # smpl-Python
-A Python implementation of the discrete event simulation environment 'smpl' (original C version by Myron H. MacDougall)
+A Python implementation of the discrete event simulation environment 'smpl'. The original 'smpl' library was developed by Myron H. MacDougall. This version is mostly based on the C implementation of the library, which was released on October 22, 1987. This version is also based on the C version with bugfixes provided by Elias Procópio Duarte Júnior, and on the C version provided by Teemu Kerola.
