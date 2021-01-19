@@ -273,7 +273,7 @@ class Smpl:
         
         This method checks which is the next event, advances the virtual time to the time of the event, and returns the event code-token pair.
         
-        Unlike original 'smpl', this method does not crash is the event list is empty. Rather, it returns a None event-code pair.
+        Unlike original 'smpl', this method does not crash is the event list is empty. Rather, it returns None.
         
         Returns:
             The event code-token pair.
@@ -338,7 +338,7 @@ class Smpl:
                 self._msg("CANCEL EVENT " + succEventDescriptor.eventCode + " FOR TOKEN " + token)
             
             if succEventDescriptor == self._eventQueueHead:
-                # unlink event */
+                # unlink event
                 self._eventQueueHead = succEventDescriptor.next
             else:
                 # list entry & deallocate it
@@ -346,7 +346,43 @@ class Smpl:
             self._put_elm(succEventDescriptor)
         
         return token
-
+    
+    def unschedule(self, eventCode, token):
+        """
+        Reverts the scheduling of an upcoming event based on its event code and token.
+        
+        Parameters:
+            eventCode (int): The event code.
+            token (object): An object which identifies the event target.
+        
+        Returns:
+            A boolean indicating if the event was cancelled.
+        """
+        
+        # search for the event in the event queue.
+        predEventDescriptor = None
+        succEventDescriptor = self._eventQueueHead
+        while succEventDescriptor is not None and (succEventDescriptor.eventCode != eventCode or succEventDescriptor.token != token):
+            predEventDescriptor = succEventDescriptor
+            succEventDescriptor = predEventDescriptor.next
+        
+        # removes the event from the event queue.
+        cancelled = False
+        if succEventDescriptor is not None:
+            cancelled = True
+            if self._traceEnabled:
+                self._msg("UNSCHEDULE EVENT " + succEventDescriptor.eventCode + " FOR TOKEN " + token)
+            
+            if succEventDescriptor == self._eventQueueHead:
+                # unlink event
+                self._eventQueueHead = succEventDescriptor.next
+            else:
+                # list entry & deallocate it
+                predEventDescriptor.next = succEventDescriptor.next
+            self._put_elm(succEventDescriptor)
+        
+        return cancelled
+    
     def _suspend(self, token):
         """
         Suspends and upcoming event.
@@ -885,7 +921,7 @@ class Smpl:
 
 class Rand:
     """
-    A Java implementation of the pseudo-random number generator of 'smpl'.
+    A Python implementation of the pseudo-random number generator of 'smpl'.
     """
     
     DEFAULT_STREAMS = [ 1973272912, 747177549, 20464843, 640830765, 1098742207, 78126602, 84743774, 831312807, 124667236, 1172177002, 1124933064, 1223960546, 1878892440, 1449793615, 553303732 ]
