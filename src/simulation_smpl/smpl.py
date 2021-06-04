@@ -524,7 +524,7 @@ class Smpl:
         Parameters:
             facilityIdentifier (FacilityIdentifier): Identifier of the facility.
             token (object): An object which identifies the event target.
-            priority (int): Priority of the request. Lower numbers mean higher priority.
+            priority (int): Priority of the request. Higer values mean higher priority.
         
         Returns:
             A value indicating if a facility server was requested.
@@ -603,7 +603,7 @@ class Smpl:
         Parameters:
             facilityIdentifier (FacilityIdentifier): Identifier of the facility.
             token (object): An object which identifies the event target.
-            priority (int): Priority of the request. Lower numbers mean higher priority.
+            priority (int): Priority of the request. Higer values mean higher priority.
         
         Returns:
             A value indicating if a facility server was requested.
