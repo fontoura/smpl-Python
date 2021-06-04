@@ -494,6 +494,8 @@ class Smpl:
             The unique identifier of the facility.
         """
         
+        if facilityName is None:
+            raise ValueError("The facility must have a name!")
         if totalServers <= 0:
             raise ValueError("The facility must have at least one server!")
         
