@@ -989,12 +989,12 @@ class Rand:
         # [C] p=(short *)&I
         # [C] Hi=*(p+1)*A
         # (p is pointer to I)
-        Hi = Rand._getShort1(self._I) * Rand.A
+        Hi = self._getShort1(self._I) * Rand.A
         
         # 16807*L->Lo
         # [C] *(p+1)=0
         # (p is pointer to I)
-        self._I = Rand._setShort1(self._I, 0)
+        self._I = self._setShort1(self._I, 0)
         
         # [C] Lo=I*A
         # (p is pointer to I)
@@ -1004,7 +1004,7 @@ class Rand:
         # [C] p=(short *)&Lo
         # [C] Hi+=*(p+1)
         # (p is pointer to Lo)
-        Hi += Rand._getShort1(Lo)
+        Hi += self._getShort1(Lo)
         
         # low-order bits of Hi->LO
         # [C] q=(short *)&Hi
@@ -1013,14 +1013,14 @@ class Rand:
         # clear sign bit
         # [C] *(p+1)=*q&0X7FFF
         # (p is pointer to Lo, q is pointer to Hi)
-        Lo = Rand._setShort1(Lo, Rand._getShort0(Hi) & 0x7FFF)
+        Lo = self._setShort1(Lo, self._getShort0(Hi) & 0x7FFF)
         
         # Hi bits 31-45->K
         # [C] k=*(q+1)<<1
         # [C] if (*q&0x8000) { k++ }
         # (q is pointer to Hi)
-        k = Rand._getShort1(Hi) << 1
-        if 0 != (Rand._getShort1(Hi) & 0x8000):
+        k = self._getShort1(Hi) << 1
+        if 0 != (self._getShort0(Hi) & 0x8000):
             k += 1
         
         # form Z + K [- M] (where Z=Lo): presubtract M to avoid overflow
