@@ -13,13 +13,13 @@ class TestRand(unittest.TestCase):
         log = []
 
         for s in range(-1, 18):
-            ex = None
+            ok = True
             try:
                 rand.stream(s)
-            except Exception as e:
-                ex = e
+            except:
+                ok = False
             
-            log.append((s, 'ok' if ex is None else 'not ok'))
+            log.append((s, 'ok' if ok else 'not ok'))
         
         self.assertEqual(log, [
             (-1, 'not ok'),
@@ -87,6 +87,37 @@ class TestRand(unittest.TestCase):
                 generated[s].append(x)
         
         self.assertEqual(expected, generated)
+    
+    def test_uniform_boundaries_must_be_valid(self):
+        log = {}
+        rand = Rand()
+        for a in range(0, 20, 5):
+            for b in range(0, 20, 5):
+                ok = True
+                try:
+                    rand.uniform(a, b)
+                except:
+                    ok = False
+                log[(a, b)] = 'ok' if ok else 'not ok'
+        
+        self.assertEqual(log, {
+            (0, 0): "ok",
+            (0, 5): "ok",
+            (0, 10): "ok",
+            (0, 15): "ok",
+            (5, 0): "not ok",
+            (5, 5): "ok",
+            (5, 10): "ok",
+            (5, 15): "ok",
+            (10, 0): "not ok",
+            (10, 5): "not ok",
+            (10, 10): "ok",
+            (10, 15): "ok",
+            (15, 0): "not ok",
+            (15, 5): "not ok",
+            (15, 10): "not ok",
+            (15, 15): "ok",
+        })
 
 class TestSmpl(unittest.TestCase):
     def test_model_name(self):
@@ -106,7 +137,7 @@ class TestSmpl(unittest.TestCase):
         self.assertEqual(smpl.fname(f2), "Facility2")
         self.assertEqual(smpl.fname(f3), "Facility3")
     
-    def test_facility_name_must_be_provided(self):
+    def test_facility_name_is_required(self):
         smpl = Smpl()
         smpl.init("Simulation")
         
