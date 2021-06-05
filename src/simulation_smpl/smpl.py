@@ -976,7 +976,7 @@ class Rand:
     
     def ranf(self):
         """
-        Generates a pseudo-random value from a normal distribution ranging from 0 to 1.
+        Generates a pseudo-random value from an uniform distribution ranging from 0 to 1.
         
         Returns:
             The generated pseudo-random number.
@@ -1046,12 +1046,12 @@ class Rand:
         """
         
         if a > b:
-            raise ValueError("For the normal pseudo-random generator, the lower boundary must not exceed the higher boundary")
+            raise ValueError("For the uniform pseudo-random generator, the lower boundary must not exceed the higher boundary")
         return (a + (b - a) * self.ranf())
     
     def random(self, i, n):
         """
-        Generates a pseudo-random integer in a range from a uniform distribution.
+        Generates a pseudo-random integer in a range from an uniform distribution.
         
         Parameters:
             i (int): The lower boundary, inclusive.
@@ -1062,7 +1062,7 @@ class Rand:
         """
         
         if i > n:
-            raise ValueError("For the normal pseudo-random generator, the lower boundary must not exceed the higher boundary")
+            raise ValueError("For the uniform pseudo-random generator, the lower boundary must not exceed the higher boundary")
         m = n - i
         d = int((m + 1.0) * self.ranf())
         return (i + d)
