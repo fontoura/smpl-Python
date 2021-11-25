@@ -37,8 +37,6 @@ Authors:
 import sys
 import math
 
-from .Rand import Rand
-
 RESERVED = 0
 QUEUED = 1
 
