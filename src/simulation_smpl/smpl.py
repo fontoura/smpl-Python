@@ -295,7 +295,7 @@ class Smpl:
         empty. Instead, it returns None.
 
         Returns:
-            The event code-token pair.
+            The event code-token pair, or None.
         """
 
         result = None
@@ -342,6 +342,25 @@ class Smpl:
             The token of the canceled event, or None.
         """
 
+        token_and_time = self.remevent(event_code)
+
+        token = None
+        if token_and_time is not None:
+            token = token_and_time[0]
+        
+        return token
+
+    def remevent(self, event_code):
+        """
+        Cancels an upcoming event based on its event code.
+
+        Parameters:
+            event_code (int): The event code.
+
+        Returns:
+            The canceled event token-trigger time pair, or None.
+        """
+
         # search for the event in the event queue.
         pred_event_descriptor = None
         succ_event_descriptor = self._event_queue_head
@@ -350,9 +369,10 @@ class Smpl:
             succ_event_descriptor = pred_event_descriptor.next
 
         # removes the event from the event queue.
+        token_and_time = ()
         token = None
         if succ_event_descriptor is not None:
-            token = succ_event_descriptor.token
+            token_and_time = (succ_event_descriptor.token, succ_event_descriptor.trigger_time)
             if self._trace_enabled:
                 self._msg("CANCEL EVENT " + succ_event_descriptor.event_code + " FOR TOKEN " + token)
 
@@ -364,7 +384,7 @@ class Smpl:
                 pred_event_descriptor.next = succ_event_descriptor.next
             self._put_elm(succ_event_descriptor)
 
-        return token
+        return token_and_time
 
     def unschedule(self, event_code, token):
         """
@@ -530,6 +550,12 @@ class Smpl:
             self._msg("CREATE FACILITY " + facility_name + " WITH ID " + new_facility_identifier)
 
         return new_facility_identifier
+
+    def reserve(self, facility_identifier, token, priority):
+        """
+        Alias for the 'request' method.
+        """
+        return self.request(self, facility_identifier, token, priority)
 
     def request(self, facility_identifier, token, priority):
         """
@@ -824,6 +850,12 @@ class Smpl:
         facility_data = self._get_facility(facility_identifier)
         return facility_data.busy_servers == len(facility_data.servers)
 
+    def qlength(self, facility_identifier):
+        """
+        Alias for the 'inq' method.
+        """
+        return self.inq(facility_identifier)
+
     def inq(self, facility_identifier):
         """
         Gets current queue length of a facility.
@@ -1024,6 +1056,12 @@ class Rand:
         """
 
         self._seed = seed
+
+    def prop(self):
+        """
+        Alias for the 'ranf' method.
+        """
+        return self.ranf()
 
     def ranf(self):
         """
